@@ -5,6 +5,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
+import UserRoutes from './routes/user.routes.js'
 
 
 //make instance of express 
@@ -33,6 +34,9 @@ app.use('/ping',(req,res)=>{
 app.all('*',(req,res)=>{
     res.status(404).json('OOPS Page Not Found!')
 })
+
+// routes for user query 
+app.use('/api/v1/user',UserRoutes)
 
 
 //export the module so other file can use it 
