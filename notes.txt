@@ -1,0 +1,12 @@
+dependecies use in project 
+
+bcryptjs 
+cloudinary
+cookie-parser 
+cors 
+dotenv 
+express 
+jsonwebtoken 
+mongoose 
+multer 
+nodemailer  
