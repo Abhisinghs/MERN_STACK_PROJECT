@@ -1,12 +1,13 @@
 dependecies use in project 
 
-bcryptjs 
+bcryptjs : it is usally encrypt the data because attacker cannot access easily (like password)
 cloudinary
-cookie-parser 
-cors 
-dotenv 
-express 
+cookie-parser : this dependecies is used to parse the cookie data and get neccessary info 
+cors : it allow to hosted website  that connect with  server 
+dotenv : it is holds the all environmental variable that hidden by third party 
+express : it is framework that is used to allow with backend work 
 jsonwebtoken 
-mongoose 
+mongoose : mongoose is odm that is used to connect the database with server 
 multer 
+morgan : morgan dependecies is a logger middle ware that used to log the message  
 nodemailer  
