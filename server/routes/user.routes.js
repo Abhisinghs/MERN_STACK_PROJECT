@@ -10,6 +10,4 @@ routes.post('/login',login);
 routes.get('/logout',logout);
 routes.get('/me',getProfile);
 
-
-
 export default routes;
