@@ -19,4 +19,5 @@ const connectDb= async()=>{
 }
 
 
+// export the module 
 export default connectDb;

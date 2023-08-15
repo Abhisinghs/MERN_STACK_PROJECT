@@ -1,11 +1,12 @@
 // import dotenv file 
 import 'dotenv/config'
 //import the express module and neccessary modules
-import express from 'express'
+import express, { urlencoded } from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import UserRoutes from './routes/user.routes.js'
+import errorMiddleware from './middleware/error.middleware.js'
 
 
 //make instance of express 
@@ -20,6 +21,7 @@ app.use(cors({
 }))
 app.use(cookieParser())  //cookie can parse and get only neccassary info 
 app.use(morgan('dev'));  //it is a logger middle ware that log the message in console 
+app.use(urlencoded({extended:true}))
 
 
 //when someone ping to server 
@@ -30,13 +32,16 @@ app.use('/ping',(req,res)=>{
 
 //define routes for module 
 
+// routes for user query 
+app.use('/api/v1/user',UserRoutes)
+
 // if user hit the undefined url (NOT Defined URL) so send the error url -> routes 
 app.all('*',(req,res)=>{
     res.status(404).json('OOPS Page Not Found!')
 })
 
-// routes for user query 
-app.use('/api/v1/user',UserRoutes)
+// generic error handling (error middle ware)
+app.use(errorMiddleware);  // now go to errorMiddleware in middleware file 
 
 
 //export the module so other file can use it 

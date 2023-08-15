@@ -4,10 +4,12 @@
 
 //import mongoose 
 import mongoose, { Schema } from 'mongoose';
+import bcrypt from 'bcryptjs';
+import JWT from 'jsonwebtoken';
 
 //define schema 
 const userSchema = mongoose.Schema({
-    fullname :{
+    fullName :{
         type:String,
         required:[true,'Product name is required'],
         minlength:[5,'name length should be greater than 5'],
@@ -16,7 +18,7 @@ const userSchema = mongoose.Schema({
         trim:true      //extra space will be remove 
     },
     email:{
-        type:Number,
+        type:String,
         required:[true,'Email is required'],
         lowercase:true,
         trim:true,
@@ -50,6 +52,35 @@ const userSchema = mongoose.Schema({
         timestamps:true   //it stores proper timestamps in DB 
     }  
 )
+
+//define pre hook to encrypt the password 
+userSchema.pre('save',async function(next){
+    //if no change in password 
+    if(!this.isModified('password')){
+        return next();
+    }
+
+    // if change then encrypt 
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password.toString(),salt);  //my password in random 10 char generate 
+    return next()
+})
+
+//define method to generate token 
+userSchema.methods={
+    generateJWTToken:async function(){
+        return await JWT.sign(
+            { id:this._id,email:this.email,subscription:this.subscription,role:this.role},
+            process.env.JWT_SECRET,
+            {
+                expiresIn:process.env.JWT_EXPIRY,
+            }
+        )
+    },
+    comparePassword: async function(plainTextPassword){  //compare encrypted password 
+        return  await bcrypt.compare(plainTextPassword,this.password)
+    }
+}
 
 // make instance of Schema 
 const userData= mongoose.model('userData',userSchema);
