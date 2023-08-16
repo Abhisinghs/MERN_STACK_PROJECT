@@ -1,6 +1,7 @@
 //Here we cover only logic part 
 // In this controller file we only make function or module and use in routers file 
 //import module form different file 
+import 'dotenv/config'
 import userData from '../models/user.model.js'
 import AppError from '../utils/error.util.js'
 import cloudinary from 'cloudinary'
@@ -42,7 +43,7 @@ const register = async(req,res,next)=>{
             email,
             password,
             avtar:{
-                pubilc_id:'http',
+                public_id:'http',
                 secure_url:'demo url'
             }
         })
@@ -52,6 +53,8 @@ const register = async(req,res,next)=>{
             return next(new AppError('user registration failed,Please try!',404));
         }
 
+        console.log('object');
+        console.log(req.file);
         // 2.step 
         //TODO: file upload (we upload the file on third party app so our data can safe )
         if(req.file){
@@ -70,7 +73,7 @@ const register = async(req,res,next)=>{
                     user.avtar.secure_url=result.secure_url;
 
                     //remove file from server 
-                    fs.rm(`uploads/${req.file.filename}`)
+                    // fs.rm(`uploads/${req.file.filename}`)
                 }
             }catch(e){
                 return next(
@@ -88,7 +91,7 @@ const register = async(req,res,next)=>{
         // after registration we direct allow to login to user 
 
         // 1.)token generate 
-        const token = await userData.generateJWTToken();  //this method define in user.model
+        const token = await User.generateJWTToken();  //this method define in user.model
 
         //set cookie 
         res.cookie('token',token,cookieOptions);

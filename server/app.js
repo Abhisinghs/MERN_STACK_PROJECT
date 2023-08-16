@@ -21,7 +21,7 @@ app.use(cors({
 }))
 app.use(cookieParser())  //cookie can parse and get only neccassary info 
 app.use(morgan('dev'));  //it is a logger middle ware that log the message in console 
-app.use(urlencoded({extended:true}))
+// app.use(urlencoded({extended:false}))
 
 
 //when someone ping to server 

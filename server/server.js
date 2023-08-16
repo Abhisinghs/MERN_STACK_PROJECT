@@ -14,6 +14,8 @@ cloudinary.v2.config({
     api_key:process.env.CLOUDINARY_API_KEY,
     api_secret:process.env.CLOUDINARY_API_SECRET,
 })
+
+
 // listen service to run the server  
 app.listen(PORT,async()=>{
     //connect with DB

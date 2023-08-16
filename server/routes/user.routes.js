@@ -10,7 +10,7 @@ import upload from '../middleware/multer.middleware.js';
 const routes=express.Router();
 
 //define routes for user
-routes.post('/register',upload.single("avtar"),register);  //first go to avtar file and take data from avtar
+routes.post('/register',upload.single('avatar'),register);  //first go to avtar file and take data from avtar
 routes.post('/login',login);
 routes.get('/logout',logout);
 routes.get('/me',isLoggedIn,getProfile);  //first we check user loggin or not then collect all data through cookie and then provide the profile data
