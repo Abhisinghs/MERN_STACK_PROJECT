@@ -11,8 +11,8 @@ const sendEmail = async function(email,subject,message){
         secure: false,  //true for 465, false for other ports 
         auth: {
           // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-          user: SMTP_USERNAME,
-          pass: SMTP_PASSWORD,
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
         }
     });
 

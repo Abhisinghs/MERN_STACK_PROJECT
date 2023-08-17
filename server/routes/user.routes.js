@@ -1,6 +1,6 @@
 //import express to make route
 import express from 'express'
-import {register,login,logout,getProfile, forgotPassword, resetPassword} from '../controllers/user.controller.js';
+import {register,login,logout,getProfile, forgotPassword, resetPassword, changePassword, updateUser} from '../controllers/user.controller.js';
 import isLoggedIn from '../middleware/auth.middleware.js';
 import upload from '../middleware/multer.middleware.js';
 
@@ -15,7 +15,9 @@ routes.post('/login',login);
 routes.get('/logout',logout);
 routes.get('/me',isLoggedIn,getProfile);  //first we check user loggin or not then collect all data through cookie and then provide the profile data
 routes.post('/forgotPassword',forgotPassword);
-routes.post('/resetPassword',resetPassword);
+routes.post('/resetPassword/:resetToken',resetPassword);
+routes.post('/changePassword',isLoggedIn,changePassword);
+routes.put('/updateProfile',isLoggedIn,upload.single('avatar'),updateUser);
 
 
 export default routes;

@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema({
         lowercase:true,
         trim:true,
         unique:true,   //dont store the same user email 
+        match: [
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            'Please fill in a valid email address',
+        ]
     },
     password:{
         type:Number,

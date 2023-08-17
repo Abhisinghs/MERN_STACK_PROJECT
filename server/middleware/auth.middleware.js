@@ -1,4 +1,5 @@
 import AppError from "../utils/error.util.js";
+import jwt from 'jsonwebtoken'
 
 
 const isLoggedIn=(req,res,next)=>{
@@ -8,7 +9,7 @@ const isLoggedIn=(req,res,next)=>{
         return next(new AppError('Unauthenticated , please login again',404));
     }
 
-    const userDetails = jwt.verfy(token,process.env.JWT_SECRET);
+    const userDetails = jwt.verify(token,process.env.JWT_SECRET);
 
     req.user = userDetails;
 
