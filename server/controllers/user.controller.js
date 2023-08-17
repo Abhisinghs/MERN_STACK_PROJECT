@@ -6,6 +6,8 @@ import userData from '../models/user.model.js'
 import AppError from '../utils/error.util.js'
 import cloudinary from 'cloudinary'
 import fs from 'fs/promises'
+import sendEmail from '../utils/sendEmail.js'
+import crypto from 'crypto';
 
 // define cookieOptions because we user multiple places
 const cookieOptions={
@@ -42,7 +44,7 @@ const register = async(req,res,next)=>{
             fullName,
             email,
             password,
-            avtar:{
+            avatar:{
                 public_id:'http',
                 secure_url:'demo url'
             }
@@ -53,14 +55,16 @@ const register = async(req,res,next)=>{
             return next(new AppError('user registration failed,Please try!',404));
         }
 
-        console.log('object');
-        console.log(req.file);
+
         // 2.step 
         //TODO: file upload (we upload the file on third party app so our data can safe )
+        if(!req.file){
+            return res.status(400).json('please upload  a file')
+        }
+
         if(req.file){
-            console.log(req.file);
             try{
-                const result =  await cloudinary.v2.uploader.upload(req.fiel.path,{
+                const result =  await cloudinary.v2.uploader.upload(req.file.path,{
                     folder:'lms',
                     width:250,
                     height:250,
@@ -69,11 +73,11 @@ const register = async(req,res,next)=>{
                 })
 
                 if(result){
-                    user.avtar.pubilc_id=result.public_id;
-                    user.avtar.secure_url=result.secure_url;
+                    User.avatar.public_id=result.public_id;
+                    User.avatar.secure_url=result.secure_url;
 
                     //remove file from server 
-                    // fs.rm(`uploads/${req.file.filename}`)
+                    fs.rm(`uploads/${req.file.filename}`)
                 }
             }catch(e){
                 return next(
@@ -120,7 +124,7 @@ const login=async(req,res)=>{
         }
     
         // we get the user detail to login 
-        const user=await user.findOne({
+        const user=await userData.findOne({
             email,
         }).select('+password');  //get password explicitly  using select becuase in user model we select : false 
     
@@ -142,7 +146,7 @@ const login=async(req,res)=>{
             message:'User login sccussefully'
         })
     }catch(err){
-        return next(new AppError(e.message,500));
+        return next(new AppError(err.message,500));
     }
 }
 
@@ -177,11 +181,69 @@ const getProfile = async(req,res,next)=>{
     }
 }
 
+//forgotpassword logic
+const forgotPassword = async(req, res,next)=>{
+    //get email from body
+    const {email}=req.body;
+
+    //if email is present on body or not 
+    if(!email){
+        return next(new AppError('Email is required',400));
+    }
+
+    //email is present on database or not 
+    const user = await userData.findOne({email});
+    if(!user){
+        return next(new AppError('Email not registered',400));
+    }
+
+   console.log('hello');
+    //generate token 
+    const resetToken = await user.generatePasswordResetToken();
+
+    //store token in database before sending to user 
+    await user.save();
+
+    const resetPasswordURL= `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+    // resetPasswordURL 
+    console.log(resetPasswordURL);
+
+    const subject='Reset Password';
+
+    const message = `You can reset your password by clicking <a href=${resetPasswordURL} target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordURL}.\n If you have not requested this, kindly ignore.`;
+
+    //send url of user email
+    try{
+
+        //send detail to email method that send email to user
+        await sendEmail(email,subject,message);
+
+        res.status(200).json({
+            success:true,
+            message:`Reset password token has been sent to ${email} successfully`
+        })
+    }catch(e){
+        //if any error occur so we reset the password token and expiry than we can use again no need to create new variable 
+        user.forgotPasswordExpiry=undefined;
+        user.forgotPasswordToken=undefined;
+
+        // await user.save();
+        return next(new AppError(e.message,500))
+    }
+}
+
+//reset password logic
+const resetPassword =()=>{
+
+}
 
 // export these module so routes file can use 
 export {
     register,
     login,
     logout,
-    getProfile
+    getProfile,
+    forgotPassword,
+    resetPassword
 };

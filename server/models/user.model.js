@@ -6,6 +6,7 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import JWT from 'jsonwebtoken';
+import crypto from 'crypto'
 
 //define schema 
 const userSchema = mongoose.Schema({
@@ -32,7 +33,7 @@ const userSchema = mongoose.Schema({
 
         //we can take the password as select('+Password') in controller file 
     },
-    avtar:{
+    avatar:{
         public_id:{
             type:String
         },
@@ -45,13 +46,19 @@ const userSchema = mongoose.Schema({
         enum:['USER','ADMIN'],
         default:'USER'
     },
-    forgotPasswordToken:String,
-    forgotPasswordExpiry:String
+    forgotPasswordToken: String,
+    forgotPasswordExpiry: Date,
+    subscription: {
+        id: String,
+        status: String
+    }
+
 },
     {
         timestamps:true   //it stores proper timestamps in DB 
     }  
 )
+
 
 //define pre hook to encrypt the password 
 userSchema.pre('save',async function(next){
@@ -59,7 +66,7 @@ userSchema.pre('save',async function(next){
     if(!this.isModified('password')){
         return next();
     }
-
+this.hello="hgjhhjhh"
     // if change then encrypt 
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password.toString(),salt);  //my password in random 10 char generate 
@@ -79,6 +86,19 @@ userSchema.methods={
     },
     comparePassword: async function(plainTextPassword){  //compare encrypted password 
         return  await bcrypt.compare(plainTextPassword,this.password)
+    },
+    generatePasswordResetToken :async function(){
+        const resetToken = crypto.randomBytes(20).toString('hex');
+
+    
+        this.forgotPasswordToken = crypto
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex')
+        ;
+        this.forgotPasswordExpiry = Date.now() + 15 * 60*1000; //15min from now 
+
+        return resetToken;
     }
 }
 
@@ -87,3 +107,4 @@ const userData= mongoose.model('userData',userSchema);
 
 // export the module 
 export default userData;
+
