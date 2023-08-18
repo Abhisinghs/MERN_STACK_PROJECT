@@ -31,19 +31,20 @@ const courseSchema= new Schema({
             required:true
         }
     },
-    lectures:{
+    lectures:[{
         title:String,
         description:String,
-        public_id:{
-            type:String,
-            // required:true
-        },
-        secure_url:{
-            type:String,
-            // required:true
+       lecture:{
+            public_id:{
+                type:String,
+                required:true
+            },
+            secure_url:{
+                type:String,
+                required:true
+            }
         }
-
-    },
+    }],
     numberOfLecture:{
         type:Number,
         default:0

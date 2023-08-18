@@ -202,11 +202,130 @@ const removeCourse=async(req,res,next)=>{
 
 }
 
+//define add lecture logic 
+const addLectureByCourseId=async(req,res,next)=>{
+    const{title,description,lecture}=req.body
+    const {id}=req.params
+
+    try{
+            
+        //check fields 
+        if(!title || !description){
+            return next(
+                new AppError('all fields are required ',500)
+            )
+        }
+
+        console.log('object');
+        //check course not present in database 
+        const course = await courseModel.findById(id);
+
+        if(!course){
+            return next(
+                new AppError('course with given id does not exists',500)
+            )
+        }
+
+        // now we take lecture details 
+        const lectureData={
+            title,         //  we can take both things from req
+            description,
+            lecture:{}
+        }
+
+
+        if(req.file){
+
+            try{
+            
+                const result= await cloudinary.v2.uploader.upload(req.file.path,{
+                    folder:'lms'
+                });
+        
+    
+                if(result){
+                    lectureData.lecture.public_id=result.public_id;
+                    lectureData.lecture.secure_url=result.secure_url
+                }
+        
+                //delete from server no need because we already stored at cloud
+                fs.rm(`uploads/${req.file.filename}`);
+
+            }catch(e){
+                return next(
+                    new AppError('upload failed, please try again',500)
+                )
+            }
+        }
+
+        //store lectures data in database 
+        course.lectures.push(lectureData);
+
+        //increase the numberofLectures
+        course.numberOfLecture= course.lectures.length;
+
+        
+        //store in databse 
+        await course.save();
+        console.log('object');
+
+        //send response to admin
+        return res.status(200).json({
+            success:true,
+            message:'Lecture added successfully'
+        })
+    }catch(e){
+        return next(
+            new AppError('Error occur while adding lecture',500)
+        )
+    }
+}
+
+
+//delete lecture from course 
+const deleteLecture = async(req,res,next)=>{
+    // first i take course id from user 
+    const {id}=req.params;
+    // const {lectureId}=req.body;
+     
+    try{
+            
+        if(!id){
+            return next(
+                new AppError('please provide course id',400)
+            )
+        }
+
+        // now check course is present or not 
+        const course= await courseModel.findById(id);
+
+        console.log(course);
+        if(!course){
+            return next(
+                new AppError('course not present',400)
+            )
+        }
+
+
+        return res.status(200).json({
+            success:true,
+            message:'lecture remove successfully',
+            lecture
+        })
+
+    }catch(e){
+        return next(
+            new AppError(e.message,400)
+        )
+    }
+
+}
 
 export {
     createCourse,
     getAllCourses,
     getLectueByCourseId,
     updateCourse,
-    removeCourse
+    removeCourse,
+    addLectureByCourseId,deleteLecture
 }

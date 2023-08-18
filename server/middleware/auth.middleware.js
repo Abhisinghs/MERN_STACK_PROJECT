@@ -20,7 +20,7 @@ const isLoggedIn = (req,res,next)=>{
 //atuhorised candidate logic 
 const atuhorisedRoles=(...roles)=>(req,res,next)=>{
     //get all roles 
-    const currentUserRoles = req.user.roles
+    const currentUserRoles = req.user.role
 
     if(!roles.includes(currentUserRoles)){
         return next(
