@@ -1,13 +1,20 @@
 dependecies use in project 
 
 bcryptjs : it is usally encrypt the data because attacker cannot access easily (like password)
-cloudinary
+multer :it helps to convert binary data that take from user and then convert on image in server temporarliy and send to cloudinary and delete from server 
+cloudinary:it helps to take image  from server and then store on third party service at cloud  
 cookie-parser : this dependecies is used to parse the cookie data and get neccessary info 
 cors : it allow to hosted website  that connect with  server 
 dotenv : it is holds the all environmental variable that hidden by third party 
 express : it is framework that is used to allow with backend work 
-jsonwebtoken 
+jsonwebtoken :this basically used to generate a web token 
 mongoose : mongoose is odm that is used to connect the database with server 
-multer 
 morgan : morgan dependecies is a logger middle ware that used to log the message  
-nodemailer  
+nodemailer  :this module use to send information to the user email (if we forgot password or reset password so send the link to change password)
+
+
+Validation : validate the user details 
+we can apply the validation in three places 
+1.frontend - level -> using javascript 
+2.backend - level -> controller defined function
+3.Databse - level -> schema defined 
