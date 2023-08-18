@@ -1,8 +1,8 @@
 //import the router module 
 import {Router} from 'express'
-import { createCourse, getAllCourses, getLectueByCourseId, removeCourse, updateCourse } from '../controllers/course.controller.js';
-import isLoggedIn, { atuhorisedRoles } from '../middleware/auth.middleware.js';
+import {createCourse, getAllCourses, getLectueByCourseId, removeCourse, updateCourse } from '../controllers/course.controller.js';
 import upload from '../middleware/multer.middleware.js';
+import { atuhorisedRoles, isLoggedIn } from '../middleware/auth.middleware.js';
 
 
 //make instace of router 

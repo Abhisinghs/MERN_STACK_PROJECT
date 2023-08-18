@@ -2,7 +2,7 @@ import AppError from "../utils/error.util.js";
 import jwt from 'jsonwebtoken'
 
 
-const isLoggedIn=(req,res,next)=>{
+const isLoggedIn = (req,res,next)=>{
     const {token}= req.cookies;
 
     if(!token){
@@ -18,7 +18,7 @@ const isLoggedIn=(req,res,next)=>{
 
 
 //atuhorised candidate logic 
-const atuhorisedRoles = (...roles)=>async(req,res,next)=>{
+const atuhorisedRoles=(...roles)=>(req,res,next)=>{
     //get all roles 
     const currentUserRoles = req.user.roles
 
@@ -34,4 +34,4 @@ const atuhorisedRoles = (...roles)=>async(req,res,next)=>{
 export{
     isLoggedIn,
     atuhorisedRoles
- } ;
+} ;

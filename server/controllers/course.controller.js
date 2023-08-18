@@ -201,6 +201,8 @@ const removeCourse=async(req,res,next)=>{
     }
 
 }
+
+
 export {
     createCourse,
     getAllCourses,
