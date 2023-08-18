@@ -16,4 +16,22 @@ const isLoggedIn=(req,res,next)=>{
     next();
 }
 
-export default isLoggedIn;
+
+//atuhorised candidate logic 
+const atuhorisedRoles = (...roles)=>async(req,res,next)=>{
+    //get all roles 
+    const currentUserRoles = req.user.roles
+
+    if(!roles.includes(currentUserRoles)){
+        return next(
+            new AppError('You have not permission to access this route',500)
+        )
+    }
+
+    next();
+}
+
+export{
+    isLoggedIn,
+    atuhorisedRoles
+ } ;

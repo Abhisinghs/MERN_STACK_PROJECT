@@ -89,7 +89,7 @@ userSchema.methods={
         )
     },
     comparePassword: async function(plainTextPassword){  //compare encrypted password 
-        return  await bcrypt.compare(plainTextPassword,this.password)
+        return  await bcrypt.compare(plainTextPassword.toString(),this.password.toString())
     },
     generatePasswordResetToken :async function(){
         const resetToken = crypto.randomBytes(20).toString('hex');

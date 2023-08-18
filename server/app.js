@@ -6,6 +6,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import UserRoutes from './routes/user.routes.js'
+import CourseRoutes from './routes/course.routes.js'
 import errorMiddleware from './middleware/error.middleware.js'
 
 
@@ -34,6 +35,9 @@ app.use('/ping',(req,res)=>{
 
 // routes for user query 
 app.use('/api/v1/user',UserRoutes)
+
+//routes for course query 
+app.use('/api/v1/courses',CourseRoutes)
 
 // if user hit the undefined url (NOT Defined URL) so send the error url -> routes 
 app.all('*',(req,res)=>{

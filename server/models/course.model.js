@@ -1,13 +1,14 @@
 //import mongoose 
 import {Schema, model} from 'mongoose'
 
+// define a course schema 
 const courseSchema= new Schema({
     title:{
         type:String,
         required:[true,''],
         minlength:[8,'title must be atleast 8 char'],
         maxlength:[50,'title lengh should be less than 50'],
-        trim:true
+        trim:true  //add validation if any error occur it tells
     },
     description:{
         type:String,
@@ -21,7 +22,7 @@ const courseSchema= new Schema({
         required:[true,'category is required']
     },
     thumbnail:{
-        pulic_id:{
+        public_id:{
             type:String,
             required:true
         },
@@ -30,16 +31,16 @@ const courseSchema= new Schema({
             required:true
         }
     },
-    lecture:{
+    lectures:{
         title:String,
         description:String,
         public_id:{
             type:String,
-            required:true
+            // required:true
         },
         secure_url:{
             type:String,
-            required:true
+            // required:true
         }
 
     },
@@ -52,7 +53,7 @@ const courseSchema= new Schema({
         required:[true,'please mention the name of course creater']
     }
 },
-    {
+    {   //it stores the course detail with proper timestamps 
         timestamps:true
     }
 )
@@ -60,4 +61,6 @@ const courseSchema= new Schema({
 // make model instance 
 const courseModel= model('courseData',courseSchema);
 
+
+// export the course model 
 export default courseModel;
