@@ -286,11 +286,11 @@ const addLectureByCourseId=async(req,res,next)=>{
 const deleteLecture = async(req,res,next)=>{
     // first i take course id from user 
     const {id}=req.params;
-    // const {lectureId}=req.body;
+    const {lecture_id}=req.body;
      
     try{
             
-        if(!id){
+        if(!id  || !lecture_id){
             return next(
                 new AppError('please provide course id',400)
             )
@@ -306,7 +306,28 @@ const deleteLecture = async(req,res,next)=>{
             )
         }
 
+        // store length of lecture to decrese when delete lecture
+        let len=course.lectures.length;
 
+        const lecture =await courseModel.findByIdAndUpdate(
+            {_id:id},
+            { $pull: {lectures: { _id: lecture_id } } },
+            { new: true }  //it means changes save in db
+          );
+
+        //  check if courese is delete or not 
+        if(!lecture){
+            return next(
+                new(AppError('Error while deleting the lecture ',500))
+            )
+        }
+         
+        course.numberOfLecture= --len;
+
+        // save the changes 
+        course.save();
+
+        //send a confirmation message
         return res.status(200).json({
             success:true,
             message:'lecture remove successfully',
