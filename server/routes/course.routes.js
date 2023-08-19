@@ -21,6 +21,6 @@ routes.route('/:id').get(isLoggedIn,getLectueByCourseId)
 .post(isLoggedIn,atuhorisedRoles('ADMIN'),upload.single('lecture'),addLectureByCourseId);  //why we add update and delete because we need a which course we will update or delete
 
 //routs for delete lecture 
-routes.post('/deleteLecture/:id',deleteLecture);
+routes.delete('/deleteLecture/:id',deleteLecture);
 
 export default routes;
