@@ -18,3 +18,5 @@ we can apply the validation in three places
 1.frontend - level -> using javascript 
 2.backend - level -> controller defined function
 3.Databse - level -> schema defined 
+
+These all information will help to understand what the dependecies actually work 
